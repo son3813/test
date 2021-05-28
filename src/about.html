@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Election Results</title>
+    <script language="JavaScript">
+
+        // var SetTime = 600;      // 최초 설정 시간(기본 : 초)
+
+        var SetTime = Math.ceil((new Date("2021-5-24 20:00") - new Date()) / 1000)
+
+        function msg_time() {   // 1초씩 카운트
+
+            m = Math.floor(SetTime/3600) + "시간 " + Math.floor((SetTime%3600) / 60) + "분 " + (SetTime % 60) + "초";   // 남은 시간 계산
+
+            var msg = "<text-center> 현재 남은 시간은 <font color='red'>" + m + "</font> 입니다.";
+
+            document.all.ViewTimer.innerHTML = msg;      // div 영역에 보여줌
+
+            SetTime--;               // 1초씩 감소
+
+            if (SetTime < 0) {         // 시간이 종료 되었으면..
+
+                clearInterval(tid);      // 타이머 해제
+                alert("종료");
+            }
+
+        }
+
+        window.onload = function TimerStart() { tid = setInterval('msg_time()', 1000) };
+
+    </script>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <style>
+        body {
+            background-color: rgb(230, 243, 254);
+            margin: 0;
+        }
+
+        .navbar {
+            display: flex; /*한줄에 나란히.. */
+            justify-content: space-between;
+            align-items: center;
+            background-color: #263343;
+            padding: 8px 12px; /*상하: 8px, 좌우: 12px*/
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+        }
+
+        .navbar_menu {
+            display: flex; /* 한줄에 하나씩~ */
+            list-style: none; /*앞에 기호 없애주기*/
+            padding-left: 0;
+        }
+
+        .navbar_menu li {
+            padding: 8px 12px; /*상하: 8px, 좌우: 12px*/
+        }
+
+        .navbar_menu li:hover {
+            background-color: #d49466;
+            border-radius: 4px;
+        }
+
+        /* 반응형 레이아웃 */
+        @media screen and (max-width: 768px) {
+            .navbar {
+                flex-direction: column; /* 아이템 방향을 밑으로 */
+                align-items: center;
+                padding: 8px 24px;
+            }
+            .navbar_menu {
+                flex-direction: column; /* 아이템 방향을 밑으로 */
+                align-items: center; /* 중간으로 정렬 */
+                width: 100%;
+            }
+            .navbar_menu li {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        .avenir {
+            position: fixed;
+            bottom: 0;
+            right: 20px;
+            width: 100%;
+            text-align: right;
+        }
+        #candidatesSelect {
+          width:10%;
+        }
+
+
+    </style>
+
+    <nav class="navbar">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="C:Users\User\election\index.html"></a>
+            </div>
+            <ul class="navbar_menu">
+                <li class="active"><a href="..\index.html">Home</a></li>
+                <li><a href="..\candidates.html">Candidates</a></li>
+                <li><a href="..\about.html">About us</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container" style="width: 80vw;">
+        <div class="row">
+            <div class="col-lg-12" style= "margin-top:100px;">
+                <h1 class="text-center">AVENIR VOTE</h1>
+                <hr />
+                <br />
+                <div id="loader">
+                    <p class="text-center">Loading...</p>
+                </div>
+                <div id="content" style="display: none;">
+                  <style>
+
+                    .bluetop {
+                    border-collapse: collapse;
+                    border-top: 3px solid #168;
+                    }
+                    .bluetop th {
+                    color: #168;
+                    background: #f0f6f9;
+                    }
+                    .bluetop th, .bluetop td {
+                      padding: 10px;
+                      width:1000px;
+                      border: 1px solid #ddd;
+                    }
+                    .bluetop th:first-child, .bluetop td:first-child {
+                    border-left: 0;
+                    }
+                    .bluetop th:last-child, .bluetop td:last-child {
+                    border-right: 0;
+                    }
+                    </style>
+                    <table class="bluetop">
+                        <colgroup>
+                          <col style="width:5%"/>
+                          <col style="width:42.5%"/>
+                          <col style="width:42.5%"/>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th scope="col">번호</th>
+                                <th scope="col">이름</th>
+                                <th scope="col">득표수</th>
+                            </tr>
+                        </thead>
+                        <tbody id="candidatesResults">
+
+                        </tbody>
+                    </table>
+                    <hr />
+                    <form onSubmit="App.castVote(); return false;">
+                        <div class="form-group">
+                          <center><label for="candidatesSelect">Select Candidate</label></center>
+                          <center>
+                            <select class="form-control" id="candidatesSelect" style = "display:inline;margin-right:10px;"></select>
+                            <button id = "btnvote" type="submit" class="btn btn-danger">Vote</button>
+                          </center>
+                        </div>
+                        <hr />
+                    </form>
+                    <p id="accountAddress" class="text-center"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="ViewTimer" class="text-center"></div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script src="js/truffle-contract.js"></script>
+    <script src="js/app.js"></script>
+    <div class="avenir">
+        <h1 class="text-right">AVENIR</h1>
+    </div>
+    <p style="text-align: center;">
+       <img src="\images\avenirvote.png" style="padding:1% 0% 0% 0%; height:10%; width:15%">
+   </p>
+</body>
+
+</html>
